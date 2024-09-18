@@ -13,8 +13,35 @@ Pas de vocal pour l'instant :p
   On peux tout les deux regarder plotly dash et Graphana et choisir lequel des 2 on utilise (en gardant l'autre en plan B). 
   Il faudrait définir qui fait quoi. On peut chacun se concentrer sur un phénomène naturel que l'on choisit au début. Un de nous deux peut aussi même déjà penser à la visualization pourquoi pas même si c'est un peu prématuré 
 
-## 17th of September
+## 18th of September
+- J'ai organisé le squelette d'un code un minimum propre, avec un env _(c'est à faire tout le temps, ne jamais travailler sur (base), mais dans mon cas c'est encore plus primordial car j'ai un PC du labo, nomade, ce qui veut dire que les gens ont mis de la merde dans (base) petit à petit, ce qui fait que quoi que tu veuilles installer comme package (pip conda ou autre) tu auras des conflit)_, à la shlagos j'ai pas d'API comme c'est l'ordi nomade, donc je fais avec Sublime text et j'ai installé PUDB dans mon env pour avoir un debugger dans le termnal. 
+
+- Je propose qu'on utilise tout les deux au moins des configs pour pouvoir travailler plus facilement, hardcoder les chemins c'est vraiment degueux. Pour le reste aucune restriction dans le code. Qu'en penses-tu? Genre on utilise pas de convention d'écriture à la PEP8 ou équivalent, le projet et trop court pour ça, non? Aussi on ne fais pas de management d'env, chacun à son propre env. 
+
+- J'ai ajouté les pylones pour me rendre compte que c'est juste entre chaque HTB aerien tu as un fucking pylones. donc ça sert à rien.
+
+- J'ai commencé beaucoup trop tard - 21h et j'ai 1h de trajet pour rentrer - plus il faut compter le temps d'écrire les notes à partager - donc j'ai fais que dalle, beaucoup moins  que la dernière fois. Cependant il me reste plein de séances de travail, j'ai fais mon agenda dans mes notes perso si tu veux voir. Le Samedi 12 Octobre on pourrait même s'organiser une demi journée qui correspond pour que l'on travaille en même temps. Cette semaine je pourrais pas rattraper le temps perdu de ce Mercredi je suis pris jusqu'à dimanche soir. Tant pis.
+
+-   Il  faut probablement répartir les tâches comme suit. Une personne s'occupe de:
+  - l'apparence du dashboard 
+  - affichage des données réseaux sur la carte (ce qui à déjà commencé voir fini)
+  - récupérer un type de données environmentale et de l'afficher sur la carte, sur la même tab ou pas c'est selon
+  -  d'avoir un indicateur d'alerte de cette donnée sur la partie de réseaux concernée.  
+  
+  Comme j'ai compris ton code pour le dashboard et l'affiche des données réseaux, on en est au même point. Je propose d'être cette personne. Mais 2 personnes sur l'apparence du dashboard plus l'affichage du réseaux c'est contre-productif. 
+  
+  Une autre personne s'occupe d'une (ou deux) autres problématique environementale, soit:
+  
+  - de récupérer un type de données environmentale et de l'afficher sur la carte, sur la même tab ou pas c'est selon
+  - d'avoir un indicateur d'alerte de cette donnée sur la partie de réseaux concernée.
+  - potentiellement cela pour 2 menaces différentes, ou alors des données plus compliqué que la personne numéro 1 qui fait aussi le réseau et le dashboard.
+  
+  On pourrait faire un tableau avec plusieurs choix, on commencerait par ce qui fait le plus de sens.  (j'ai une idée du tableau mais là je dois vraiment y aller, j'en parle demain.)
+  
+  J'aime beaucoup ton point d), on de nous 2 pourrait s'en occuper en première menace / données environementales à traiter.
+
 # Alberto
+
 Jour 7. Toujours pas de vocal. Je crois que Lucas n'est plus. Il vivra toujours dans notre mémoire.
 
 - J'ai une branche 'alberto' que j'ai alimenté avec un src/test.py qui permet de lancer un dashboard dash. Il suffit d'executer le fichier puis d'aller sur http://127.0.0.1:8050/ . Pour l'instant, j'ai récupèré les données des lignes aériennes des geojason, parsé, puis fait un scatter mapbox des données. J'ai mis deux tabs pour organiser un peu.
