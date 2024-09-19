@@ -51,7 +51,7 @@ Pas de vocal pour l'instant :p
 
   J'aime beaucoup ton point d), on de nous 2 pourrait s'en occuper en première menace / données environementales à traiter.
 
-On devrait choisir en priorité des données qui peuvent avoir un flox online pour la prochaine étape de passer du online au offline. 
+On devrait choisir en priorité des données qui peuvent avoir un flux online pour la prochaine étape de passer du  offline au online. 
 
 # Alberto
 
