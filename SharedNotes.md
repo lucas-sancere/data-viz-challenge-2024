@@ -22,23 +22,36 @@ Pas de vocal pour l'instant :p
 
 - J'ai commencé beaucoup trop tard - 21h et j'ai 1h de trajet pour rentrer - plus il faut compter le temps d'écrire les notes à partager - donc j'ai fais que dalle, beaucoup moins  que la dernière fois. Cependant il me reste plein de séances de travail, j'ai fais mon agenda dans mes notes perso si tu veux voir. Le Samedi 12 Octobre on pourrait même s'organiser une demi journée qui correspond pour que l'on travaille en même temps. Cette semaine je pourrais pas rattraper le temps perdu de ce Mercredi je suis pris jusqu'à dimanche soir. Tant pis.
 
--   Il  faut probablement répartir les tâches comme suit. Une personne s'occupe de:
+  Il  faut probablement répartir les tâches comme suit. Une personne s'occupe de:
+
   - l'apparence du dashboard 
   - affichage des données réseaux sur la carte (ce qui à déjà commencé voir fini)
   - récupérer un type de données environmentale et de l'afficher sur la carte, sur la même tab ou pas c'est selon
   -  d'avoir un indicateur d'alerte de cette donnée sur la partie de réseaux concernée.  
-  
+
   Comme j'ai compris ton code pour le dashboard et l'affiche des données réseaux, on en est au même point. Je propose d'être cette personne. Mais 2 personnes sur l'apparence du dashboard plus l'affichage du réseaux c'est contre-productif. 
-  
+
   Une autre personne s'occupe d'une (ou deux) autres problématique environementale, soit:
-  
+
   - de récupérer un type de données environmentale et de l'afficher sur la carte, sur la même tab ou pas c'est selon
   - d'avoir un indicateur d'alerte de cette donnée sur la partie de réseaux concernée.
   - potentiellement cela pour 2 menaces différentes, ou alors des données plus compliqué que la personne numéro 1 qui fait aussi le réseau et le dashboard.
+
+  On pourrait faire un tableau avec plusieurs choix, on commencerait par ce qui fait le plus de sens. Comme ceci:
   
-  On pourrait faire un tableau avec plusieurs choix, on commencerait par ce qui fait le plus de sens.  (j'ai une idée du tableau mais là je dois vraiment y aller, j'en parle demain.)
   
+
+| Données Réseaux Affichées | API pour données Environnementales | Données Environnementales       | Seuil d'alerte                                          | Autres         |
+|---------------------------|-----------------------------------|---------------------------------|--------------------------------------------------------|----------------|
+| Hta et Htb aérien          | Météo France                      | Température, Humidité, Vent      | T > 30°C + Humidité < 30% + Vent > 30 km/h              | ------------   |
+| Machin souterrain          | Copernicus? Météo France?         | Pluie                           | Si précipitation plus de Xmm dans la zone               | ------------   |
+| To fill         | To fill       | To fill                          | To fill   | ------------   |
+
+
+
   J'aime beaucoup ton point d), on de nous 2 pourrait s'en occuper en première menace / données environementales à traiter.
+
+On devrait choisir en priorité des données qui peuvent avoir un flox online pour la prochaine étape de passer du online au offline. 
 
 # Alberto
 
