@@ -1,39 +1,24 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Sep 25 16:04:54 2024
-
-@author: alonso-pinar_a
-"""
-
 import dash
-from dash import dcc, Input, Output
-import dash_html_components as html
+from dash import dcc, html
+from dash.dependencies import Input, Output
 import plotly.express as px
-import plotly.graph_objects as go
-import json
-import os
 import xarray as xr
 import pandas as pd
 import calendar
 import numpy as np
-import yaml 
+import yaml
 from attrdictionary import AttrDict as attributedict
 
 #############################################################
 ## Load configs parameter
 #############################################################
 
-# Import parameters values from config file by generating a dict.
-# The lists will be imported as tuples.
 with open("./../configs/main_alberto.yml", "r") as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
-    
-# Create a config dict from which we can access the keys with dot syntax
+
 config = attributedict(config)
 pathtofolder = config.dashboard.data.cams.folder
-keptfiles = list(config.dashboard.data.cams.keptfiles) 
-
+keptfiles = list(config.dashboard.data.cams.keptfiles)
 
 #############################################################
 ## Load files
@@ -42,37 +27,34 @@ keptfiles = list(config.dashboard.data.cams.keptfiles)
 ext = '.nc'
 
 dust = pathtofolder + keptfiles[0] + ext
-pm10 = pathtofolder + keptfiles[1] + ext 
+pm10 = pathtofolder + keptfiles[1] + ext
 pm25 = pathtofolder + keptfiles[2] + ext
 pmwildfires = pathtofolder + keptfiles[3] + ext
 
-
-with open( dust ) as f:
-    dust_data = xr.open_dataset( dust )
-
-with open( pm10 ) as f:
-    pm10_data = xr.open_dataset( pm10 )
-
-with open( pm25 ) as f:
-    pm25_data = xr.open_dataset( pm25 )
-
-with open( pmwildfires ) as f:
-    pmwildfires_data = xr.open_dataset( pmwildfires )
+# Load datasets directly without 'with open()'
+dust_data = xr.open_dataset(dust)
+pm10_data = xr.open_dataset(pm10)
+pm25_data = xr.open_dataset(pm25)
+pmwildfires_data = xr.open_dataset(pmwildfires)
 
 #############################################################
 ## Dash app
 #############################################################
 
 available_data = ['Dust', 'PM10 particles', 'PM2.5 particles', 'PM wildfires']
-datasets = {'Dust':dust_data, 'PM10 particles':pm10_data, 
-            'PM2.5 particles':pm25_data, 'PM wildfires':pmwildfires_data }
+datasets = {
+    'Dust': dust_data,
+    'PM10 particles': pm10_data,
+    'PM2.5 particles': pm25_data,
+    'PM wildfires': pmwildfires_data
+}
 
-data_options = [{'label':element, 'value': element} for element in available_data]
+data_options = [{'label': element, 'value': element} for element in available_data]
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
 
-# Create the layout with dropdowns for month and day
+# Modify the layout to include a slider for day selection and an animate button
 app.layout = html.Div([
     html.H1("Air pollution levels over time"),
     html.Div([
@@ -80,8 +62,7 @@ app.layout = html.Div([
         dcc.Dropdown(
             id='data-dropdown',
             options=data_options,
-            value=available_data[0],
-            clearable=False
+            value=available_data[0]
         ),
     ], style={'width': '30%', 'display': 'inline-block'}),
     html.Div([
@@ -94,13 +75,23 @@ app.layout = html.Div([
     ], style={'width': '30%', 'display': 'inline-block'}),
     html.Div([
         html.Label('Select Day:'),
-        dcc.Dropdown(
-            id='day-dropdown',
-            options=[],
-            value=None
+        dcc.Slider(
+            id='day-slider',
+            min=1,
+            max=31,
+            value=1,
+            marks={},  # We'll update this dynamically
+            step=None  # Set step to None to select only marked days
         ),
-    ], style={'width': '30%', 'display': 'inline-block', 'marginLeft': '5%'}),
-    dcc.Graph(id='map')
+    ], style={'width': '90%', 'padding': '0px 20px 20px 20px'}),
+    html.Button('Animate', id='animate-button', n_clicks=0),
+    dcc.Graph(id='map'),
+    dcc.Interval(
+        id='interval-component',
+        interval=1000,  # Interval in milliseconds (adjust as needed)
+        n_intervals=0,
+        disabled=True  # Initially disabled
+    )
 ])
 
 # Callback to update the month options based on the selected dataset
@@ -109,48 +100,94 @@ app.layout = html.Div([
     Output('month-dropdown', 'value'),
     Input('data-dropdown', 'value')
 )
-
 def update_month_options(selected_data):
     data = datasets[selected_data]
     times = pd.to_datetime(data.time.values)
-    available_months = times.month.unique()
-    available_months.sort_values()
+    available_months = np.unique(times.month)
+    available_months.sort()
     month_options = [{'label': calendar.month_name[month], 'value': month} for month in available_months]
-    # Set the default day to the first available day
     default_month = available_months[0] if len(available_months) > 0 else None
     return month_options, default_month
 
-# Callback to update the day options based on the selected month
+# Callback to update the day slider based on the selected dataset and month
 @app.callback(
-    Output('day-dropdown', 'options'),
-    Output('day-dropdown', 'value'),
+    Output('day-slider', 'min'),
+    Output('day-slider', 'max'),
+    Output('day-slider', 'marks'),
+    Output('day-slider', 'value'),
     Input('data-dropdown', 'value'),
     Input('month-dropdown', 'value'),
-    
 )
-def update_day_options(selected_data, selected_month):
+def update_day_slider(selected_data, selected_month):
+    if selected_month is None:
+        return 1, 31, {}, 1  # Default values
     data = datasets[selected_data]
     times = pd.to_datetime(data.time.values)
     month_times = times[times.month == selected_month]
-    available_days = month_times.day.unique()
-    available_days.sort_values()
-    day_options = [{'label': day, 'value': day} for day in available_days]
-    # Set the default day to the first available day
-    default_day = available_days[0] if len(available_days) > 0 else None
-    return day_options, default_day
+    available_days = np.unique(month_times.day)
+    available_days.sort()
+    if len(available_days) == 0:
+        return 1, 31, {}, 1  # No available days
+    min_day = int(available_days[0])
+    max_day = int(available_days[-1])
+    marks = {int(day): str(int(day)) for day in available_days}
+    default_day = int(available_days[0])
+    return min_day, max_day, marks, default_day
 
-# Callback to update the map based on the selected month and day
+# Callback to control the interval component based on the animate button
+@app.callback(
+    Output('interval-component', 'disabled'),
+    Output('interval-component', 'n_intervals'),
+    Input('animate-button', 'n_clicks')
+)
+def control_animation(n_clicks):
+    if n_clicks % 2 == 1:
+        # If the button has been clicked an odd number of times, enable the animation
+        return False, 0  # Enable interval, reset n_intervals
+    else:
+        # Otherwise, disable the animation
+        return True, dash.no_update  # Disable interval, keep n_intervals unchanged
+
+# Callback to update the animate button text
+@app.callback(
+    Output('animate-button', 'children'),
+    Input('animate-button', 'n_clicks')
+)
+def update_button_text(n_clicks):
+    if n_clicks % 2 == 1:
+        return 'Pause'
+    else:
+        return 'Animate'
+
+# Callback to update the map based on the selected dataset, month, and day
 @app.callback(
     Output('map', 'figure'),
     Input('data-dropdown', 'value'),
     Input('month-dropdown', 'value'),
-    Input('day-dropdown', 'value')
+    Input('day-slider', 'value'),
+    Input('interval-component', 'n_intervals'),
+    Input('animate-button', 'n_clicks')
 )
-def update_map(selected_data, selected_month, selected_day):
-    
+def update_map(selected_data, selected_month, selected_day, n_intervals, n_clicks):
     dataset = datasets[selected_data]
     times = pd.to_datetime(dataset.time.values)
-    if selected_day is None or selected_month is None:
+    ctx = dash.callback_context
+
+    # Determine which input triggered the callback
+    if not ctx.triggered:
+        trigger_id = 'No clicks yet'
+    else:
+        trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
+
+    # Handle animation
+    if trigger_id == 'interval-component' and n_clicks % 2 == 1:
+        # Get available days
+        month_times = times[times.month == selected_month]
+        available_days = np.unique(month_times.day)
+        available_days.sort()
+        # Update selected_day based on n_intervals
+        selected_day = available_days[n_intervals % len(available_days)]
+    elif selected_day is None or selected_month is None:
         # If no day or month is selected, return an empty figure
         fig = px.scatter_mapbox()
         fig.update_layout(
@@ -160,9 +197,9 @@ def update_map(selected_data, selected_month, selected_day):
         return fig
 
     # Filter the dataset to the selected date
-    selected_date = pd.Timestamp(year=2023, month=selected_month, day=selected_day)
+    selected_date = pd.Timestamp(year=2023, month=selected_month, day=int(selected_day))
     selected_times = times[(times.month == selected_month) & (times.day == selected_day)]
-    
+
     variable_name = list(dataset.keys())[0]
 
     if selected_times.empty:
@@ -174,10 +211,9 @@ def update_map(selected_data, selected_month, selected_day):
         )
         return fig
 
-    
     units = dataset[variable_name].attrs.get('units', '')
     data = dataset.sel(time=selected_times).mean(dim='time')
-    
+
     # Prepare data for plotting
     aerosol = data[variable_name]
     latitudes = data.lat.values
@@ -190,17 +226,17 @@ def update_map(selected_data, selected_month, selected_day):
     # Create new longitude and latitude arrays
     new_lon = np.linspace(longitudes.min().item(), longitudes.max().item(), num=num_new_lon)
     new_lat = np.linspace(latitudes.min().item(), latitudes.max().item(), num=num_new_lat)
-    
-    lon, lat = np.meshgrid( new_lon, new_lat)
+
+    lon, lat = np.meshgrid(new_lon, new_lat)
 
     aerosol_interp = aerosol.interp(lon=new_lon, lat=new_lat, method='cubic')
 
     df_interp = pd.DataFrame({
         'Latitude': lat.ravel(),
         'Longitude': lon.ravel(),
-        'Aerosol' : aerosol_interp.values.flatten()
+        'Aerosol': aerosol_interp.values.flatten()
     })
-    
+
     # Create the figure using Plotly Express
     fig = px.scatter_mapbox(
         df_interp,
@@ -218,8 +254,7 @@ def update_map(selected_data, selected_month, selected_day):
     )
 
     # Adjust marker size and opacity for better visualization
-
-    colorbar_title = variable_name.capitalize() + ' (' + units +')' 
+    colorbar_title = f"{variable_name.capitalize()} ({units})"
     fig.layout.coloraxis.colorbar.title = colorbar_title
     fig.update_traces(marker={'size': 8})
 
