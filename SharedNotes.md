@@ -70,4 +70,10 @@ d) feux, règle des 30 : T > 30 + Humidité < 30% + Vent > 30km/h -> risque impo
 J'ai téléchargé des données CAMS Copernicus avec le dust et les PM10, pour l'année 2023.
 Le temps réel ne semble pas possible vu l'architecture statique qu'on a avec Github Pages / Dash.
 En tout cas, les données peuvent être mises dans un csv et affichées sur dash, dans un onglet environnement donc.
-Infernal le CAMS. ça a l'air de marcher mais tout n'est pas encore propre
+Infernal le CAMS. ça a l'air de marcher mais tout n'est pas encore propre.
+
+je crois que c'est propre.
+J'ai mis à jour:
+-src/testCAMS.py : qui permet de visualiser les données cams interpolées
+-configs/main_alberto.yml : ma config pour lire les fichiers
+-data/cams/* : les fichiers nc avec les données cams
