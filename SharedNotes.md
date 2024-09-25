@@ -53,6 +53,16 @@ Pas de vocal pour l'instant :p
 
 On devrait choisir en priorité des données qui peuvent avoir un flux online pour la prochaine étape de passer du  offline au online. 
 
+
+## 25th of September
+
+- J'ai commencé à essayer de récuperer les données online de météo france. Finalement je pense que pour météo france on peut aller direct sur du online. Il y a une histoire de TOKEN et de APP ID pour accéder aux sous-API de meteo france (par example: observations, previsions avec le modèle AROME), j'ai choisi la méthode la plus sécurisante (pour apprendre) aveec un TOKEN valable que quelques heure et qui se régénère à la place d'un token fixe de 3 ans. BREF. J'ai souscrit à toutes les sous-API qui pourrais être utile pour être tranquille. Le code marche pas encore totalement, mais je vais travailler dessus franchement c'est pas très dur j'ai l'impression. Je pense que maintenant que j'ai commencé je peux être seul sur l'API météo france sinon le code va être doublon 
+
+- Une fois que mes requests fonctionnent je vais essayé de faire de la visualization et d'implémenter la règle des 30. 
+
+- Pour ton code il fallait installer xarray dans l' env et pour install xarray avec pip les dependances obligatoires écrites dans la documentation ne sont pas suffisantes (j'ai compris pourquoi mais c'est un autre sujet)..... Mais finalement les autres dépendances nécessaires étaient dans un message d'erreur, mais avec des noms pareils, netcdf4 et h5netcdf j'ai pas compris que c'était des packages, j'ai crus à des options backend. Enfin bref maintenant ton code marche chez moi et la visualization est super cool mais j'ai pas regardé ce que c'était, tu pourra m'expliquer quand on se parelra. LA BISE
+
+
 # Alberto
 
 Jour 7. Toujours pas de vocal. Je crois que Lucas n'est plus. Il vivra toujours dans notre mémoire.
