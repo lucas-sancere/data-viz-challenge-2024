@@ -65,3 +65,8 @@ a) pluie! ça peut inonder les sous stations et les lignes souterraines!
 b) température! T élevées -> plus de conso electrique, surcharge des systèmes? A coupler avec les données de prod et conso peut être?
 c) orages et foudre
 d) feux, règle des 30 : T > 30 + Humidité < 30% + Vent > 30km/h -> risque important de feu. Les lignes aériennes peuvent générer des étincelles.
+
+25 Septembre
+J'ai téléchargé des données CAMS Copernicus avec le dust et les PM10, pour l'année 2023.
+Le temps réel ne semble pas possible vu l'architecture statique qu'on a avec Github Pages / Dash.
+En tout cas, les données peuvent être mises dans un csv et affichées sur dash, dans un onglet environnement donc.
