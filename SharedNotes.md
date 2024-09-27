@@ -86,4 +86,8 @@ je crois que c'est propre.
 J'ai mis à jour:
 -src/testCAMS.py : qui permet de visualiser les données cams interpolées
 -configs/main_alberto.yml : ma config pour lire les fichiers
--data/cams/* : les fichiers nc avec les données cams
+-data/cams/* : les fichiers nc avec les données cams.
+
+J'ai crée un fichier streamlit, ça marche bien.
+Normalement un pip install streamlit suffit...
+Pour lancer la page web il faut faire ensuite "streamlit run FICHIER.py"
