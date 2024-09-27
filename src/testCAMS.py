@@ -38,7 +38,7 @@ pm25_data = xr.open_dataset(pm25)
 pmwildfires_data = xr.open_dataset(pmwildfires)
 
 #############################################################
-## Dash app
+#%% Dash app
 #############################################################
 
 available_data = ['Dust', 'PM10 particles', 'PM2.5 particles', 'PM wildfires']
